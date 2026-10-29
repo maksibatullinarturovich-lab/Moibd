@@ -1,8 +1,3 @@
-"""
-FastAPI Router for Rating operations (submission, user ratings, user management).
-All ratings are persisted directly into MySQL.
-"""
-
 from datetime import datetime
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -13,7 +8,6 @@ from database.models import Rating, Movie, User
 from api.schemas import RatingCreate, RatingResponse, UserResponse, UserCreate
 
 router = APIRouter(prefix="", tags=["Ratings & Users"])
-
 
 @router.post(
     "/ratings",
@@ -26,17 +20,15 @@ def create_or_update_rating(
     data: RatingCreate,
     db: Session = Depends(get_db)
 ):
-    # Verify user exists
+
     user = db.query(User).filter(User.id == data.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail=f"Пользователь с ID {data.user_id} не найден")
 
-    # Verify movie exists
     movie = db.query(Movie).filter(Movie.id == data.movie_id).first()
     if not movie:
         raise HTTPException(status_code=404, detail=f"Фильм с ID {data.movie_id} не найден")
 
-    # Check if rating already exists (upsert)
     existing_rating = db.query(Rating).filter(
         Rating.user_id == data.user_id,
         Rating.movie_id == data.movie_id
@@ -69,7 +61,6 @@ def create_or_update_rating(
         timestamp=rating_obj.timestamp.isoformat() if rating_obj.timestamp else None
     )
 
-
 @router.get(
     "/ratings/user/{user_id}",
     response_model=List[RatingResponse],
@@ -93,12 +84,10 @@ def get_user_ratings(user_id: int, db: Session = Depends(get_db)):
         for r in ratings
     ]
 
-
 @router.get("/users", response_model=List[UserResponse], summary="Список всех пользователей")
 def list_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return [UserResponse(**u.to_dict()) for u in users]
-
 
 @router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED, summary="Создать нового пользователя")
 def create_user(user_in: UserCreate, db: Session = Depends(get_db)):

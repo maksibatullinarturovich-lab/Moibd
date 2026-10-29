@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-
 def render_dataset_overview_tab(summary: dict):
     st.subheader("Сводка по данным")
 
@@ -22,7 +21,6 @@ def render_dataset_overview_tab(summary: dict):
         st.info(f"Размерность: {summary.get('matrix_dimensions', '0x0')}")
     with m2:
         st.info(f"Средняя оценка: {summary.get('mean_rating', 0.0)} из 5.0")
-
 
 def render_distribution_charts(rating_dist: list, genre_dist: list):
     col1, col2 = st.columns(2)
@@ -68,7 +66,6 @@ def render_distribution_charts(rating_dist: list, genre_dist: list):
         else:
             st.write("Нет данных")
 
-
 def render_model_evaluation_chart(eval_data: dict):
     st.subheader("Сравнение моделей")
 
@@ -105,7 +102,6 @@ def render_model_evaluation_chart(eval_data: dict):
         )
         st.plotly_chart(fig, use_container_width=True)
 
-
 def render_pca_projection(pca_data: list):
     st.subheader("2D проекция фильмов (PCA)")
 
@@ -129,7 +125,6 @@ def render_pca_projection(pca_data: list):
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
 
 def render_similarity_heatmap(sim_data: dict):
     st.subheader("Матрица сходства фильмов")

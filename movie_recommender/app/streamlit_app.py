@@ -23,7 +23,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-
 def call_api(endpoint: str, method: str = "GET", params: dict = None, json_data: dict = None):
     url = f"{API_BASE_URL.rstrip('/')}{endpoint}"
     try:
@@ -47,8 +46,6 @@ def call_api(endpoint: str, method: str = "GET", params: dict = None, json_data:
     except Exception as e:
         return None, str(e)
 
-
-# Боковая панель
 st.sidebar.subheader("Пользователь")
 
 users_data, _ = call_api("/api/users")
@@ -85,7 +82,6 @@ nav_choice = st.sidebar.radio(
 
 st.title("Рекомендательная система фильмов")
 
-# 1. Топ-10 популярных фильмов
 if nav_choice.startswith("1."):
     st.header("1. Список Топ-10 популярных фильмов")
     st.write("Список популярных фильмов с наибольшим рейтингом.")
@@ -114,7 +110,6 @@ if nav_choice.startswith("1."):
         for movie in recs:
             render_movie_card(movie, rank=movie.get("rank"), show_score="weighted")
 
-# 2. Коллаборативная фильтрация
 elif nav_choice.startswith("2."):
     st.header("2. Коллаборативная фильтрация")
     st.write("Рекомендации на основе матрицы оценок пользователей и фильмов.")
@@ -180,7 +175,6 @@ elif nav_choice.startswith("2."):
         else:
             st.warning("Фильмы не найдены.")
 
-# 3. Рекомендации по контенту
 elif nav_choice.startswith("3."):
     st.header("3. Рекомендации по контенту")
     st.write("Поиск похожих фильмов по жанрам, описанию и создателям.")
@@ -216,7 +210,6 @@ elif nav_choice.startswith("3."):
     else:
         st.warning("Фильмы не загружены.")
 
-# 4. Персональные рекомендации
 elif nav_choice.startswith("4."):
     st.header("4. Персональные рекомендации")
     st.write("Персональный список рекомендаций для выбранного пользователя.")
@@ -252,7 +245,6 @@ elif nav_choice.startswith("4."):
     else:
         st.warning("Выберите пользователя в боковой панели.")
 
-# 5. Оценка фильма и сохранение в MySQL
 elif nav_choice.startswith("5."):
     st.header("5. Оценка фильма (БД MySQL)")
     st.write("Выбор фильма и выставление оценки с сохранением в базу данных.")
@@ -316,7 +308,6 @@ elif nav_choice.startswith("5."):
             else:
                 st.info("У этого пользователя пока нет сохраненных оценок.")
 
-# 6. Графики и аналитика
 elif nav_choice.startswith("6."):
     st.header("6. Графики и аналитика")
 
@@ -349,7 +340,6 @@ elif nav_choice.startswith("6."):
         if sim_data:
             render_similarity_heatmap(sim_data)
 
-# 7. Справка по командам и параметрам
 elif nav_choice.startswith("7."):
     st.header("7. Справка по командам и их параметрам")
     st.write("Справочная информация по эндпоинтам и параметрам API.")

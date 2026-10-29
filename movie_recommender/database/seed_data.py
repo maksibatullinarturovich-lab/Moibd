@@ -294,7 +294,6 @@ USERS_LIST = [
     {"username": "Павел", "fav": ["Триллер", "Детектив"], "low": ["Комедия"]},
 ]
 
-
 def seed_database(force_refresh: bool = False):
     init_db()
     db = SessionLocal()
@@ -364,7 +363,6 @@ def seed_database(force_refresh: bool = False):
         raise e
     finally:
         db.close()
-
 
 if __name__ == "__main__":
     seed_database(force_refresh=True)

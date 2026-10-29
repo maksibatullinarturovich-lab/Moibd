@@ -1,19 +1,7 @@
-"""
-Unit tests for Movie Recommender System.
-Verifies:
-1. Popularity Bayesian Recommender
-2. Collaborative Filtering (UBCF and IBCF)
-3. Content-Based TF-IDF Recommender
-4. Personal Hybrid Recommender (SVD + Content)
-5. Rating creation and persistence
-6. ML Evaluation engine
-"""
-
 import sys
 import os
 import unittest
 
-# Ensure root directory is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from database.connection import SessionLocal, init_db
@@ -24,7 +12,6 @@ from ml_engine.collaborative import CollaborativeRecommender
 from ml_engine.content_based import ContentBasedRecommender
 from ml_engine.personal_hybrid import PersonalHybridRecommender
 from ml_engine.evaluation import MLEvaluationEngine
-
 
 class TestRecommenders(unittest.TestCase):
 
@@ -52,7 +39,7 @@ class TestRecommenders(unittest.TestCase):
         top_10 = pop_rec.get_top_popular(self.db, limit=10)
         self.assertEqual(len(top_10), 10)
         self.assertIn("weighted_score", top_10[0])
-        # Verify scores are sorted descending
+
         scores = [m["weighted_score"] for m in top_10]
         self.assertEqual(scores, sorted(scores, reverse=True))
         print(f"[OK] Popularity top movie: '{top_10[0]['title']}' (WR: {top_10[0]['weighted_score']})")
@@ -99,7 +86,6 @@ class TestRecommenders(unittest.TestCase):
         user = self.db.query(User).first()
         movie = self.db.query(Movie).first()
 
-        # Insert or update
         r = self.db.query(Rating).filter(Rating.user_id == user.id, Rating.movie_id == movie.id).first()
         if not r:
             r = Rating(user_id=user.id, movie_id=movie.id, rating=4.5)
@@ -124,7 +110,6 @@ class TestRecommenders(unittest.TestCase):
         svd_m = metrics["models"]["SVD"]
         self.assertIn("rmse", svd_m)
         print(f"[OK] ML Evaluation completed. SVD RMSE: {svd_m['rmse']}, MAE: {svd_m['mae']}")
-
 
 if __name__ == "__main__":
     unittest.main()

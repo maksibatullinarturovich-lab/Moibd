@@ -7,7 +7,6 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
-
 class User(Base):
     __tablename__ = "users"
 
@@ -24,7 +23,6 @@ class User(Base):
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "ratings_count": len(self.ratings) if self.ratings else 0
         }
-
 
 class Movie(Base):
     __tablename__ = "movies"
@@ -65,7 +63,6 @@ class Movie(Base):
                 data["avg_rating"] = 0.0
                 data["ratings_count"] = 0
         return data
-
 
 class Rating(Base):
     __tablename__ = "ratings"

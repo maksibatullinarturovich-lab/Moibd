@@ -83,18 +83,14 @@ def parse_total_floor_count(x):
     return float(m[0]) if m else np.nan
 
 def extract_features(df_input):
-    """
-    Takes a raw or partially prepared DataFrame and extracts consistent features.
-    """
+
     df = df_input.copy()
-    
-    # 1. Building age
+
     if 'building_age' in df.columns:
         df['building_age_num'] = df['building_age'].apply(parse_building_age)
     elif 'building_age_num' not in df.columns:
         df['building_age_num'] = np.nan
-        
-    # 2. Rooms
+
     if 'room_count' in df.columns:
         room_parsed = df['room_count'].apply(parse_room_count)
         df['room_total'] = [p[0] for p in room_parsed]
@@ -107,20 +103,17 @@ def extract_features(df_input):
             df['rooms'] = df['room_total']
         if 'living_rooms' not in df.columns:
             df['living_rooms'] = 1.0
-            
-    # 3. Floor
+
     if 'floor_no' in df.columns:
         df['floor_no_num'] = df['floor_no'].apply(parse_floor_no)
     elif 'floor_no_num' not in df.columns:
         df['floor_no_num'] = np.nan
-        
-    # 4. Total floors
+
     if 'total_floor_count' in df.columns:
         df['total_floor_count_num'] = df['total_floor_count'].apply(parse_total_floor_count)
     elif 'total_floor_count_num' not in df.columns:
         df['total_floor_count_num'] = np.nan
-        
-    # 5. Address / City / District
+
     if 'address' in df.columns:
         addr_split = df['address'].astype(str).str.split('/', expand=True)
         df['city'] = addr_split[0].str.strip() if 0 in addr_split.columns else 'Unknown'
@@ -130,25 +123,23 @@ def extract_features(df_input):
             df['city'] = 'Unknown'
         if 'district' not in df.columns:
             df['district'] = 'Unknown'
-            
-    # 6. Engineered ratios
+
     safe_tot_floor = df['total_floor_count_num'].replace(0, np.nan)
     df['floor_ratio'] = (df['floor_no_num'] / safe_tot_floor).fillna(0.5).clip(0, 1.5)
     df['is_top_floor'] = (df['floor_no_num'] >= df['total_floor_count_num']).astype(float)
     df['is_ground_floor'] = (df['floor_no_num'] <= 1.0).astype(float)
-    
+
     safe_rooms = df['room_total'].replace(0, np.nan)
     df['size_per_room'] = (df['size'] / safe_rooms).fillna(35.0).clip(5, 500)
-    
-    # Ensure types
+
     for col in ['listing_type', 'tom', 'size', 'building_age_num', 'floor_no_num', 
                 'total_floor_count_num', 'room_total', 'rooms', 'living_rooms', 
                 'floor_ratio', 'is_top_floor', 'is_ground_floor', 'size_per_room']:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
-            
+
     for col in ['sub_type', 'heating_type', 'city', 'district']:
         if col in df.columns:
             df[col] = df[col].fillna('Unknown').astype(str)
-            
+
     return df

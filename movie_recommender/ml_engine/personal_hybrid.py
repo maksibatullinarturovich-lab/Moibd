@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session, joinedload
 from database.models import Movie, Rating, User
 from ml_engine.content_based import ContentBasedRecommender
 
-
 class PersonalHybridRecommender:
     def __init__(self, n_components: int = 5, alpha: float = 0.65):
         self.n_components = n_components

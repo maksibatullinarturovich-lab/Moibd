@@ -11,7 +11,6 @@ DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "movie_recommender_db")
 DB_DIALECT = "mysql"
 
-
 def create_database_if_not_exists():
     conn = pymysql.connect(
         host=DB_HOST,
@@ -28,17 +27,14 @@ def create_database_if_not_exists():
     conn.commit()
     conn.close()
 
-
 create_database_if_not_exists()
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=3600)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)
 
-
 def init_db():
     Base.metadata.create_all(bind=engine)
-
 
 def get_db():
     db: Session = SessionLocal()

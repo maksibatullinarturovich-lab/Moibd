@@ -1,27 +1,13 @@
-"""
-FastAPI REST API integration tests.
-Tests all endpoints requested in task:
-1. Popular movies
-2. Collaborative user-based & item-based
-3. Content-based
-4. Personal hybrid
-5. Ratings save to MySQL
-6. Help documentation
-7. Analytics & ML metrics
-"""
-
 import sys
 import os
 import unittest
 from fastapi.testclient import TestClient
 
-# Ensure root directory is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from api.main import app
 from database.connection import SessionLocal
 from database.models import User, Movie
-
 
 class TestAPIEndpoints(unittest.TestCase):
 
@@ -107,7 +93,6 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(res_pca.status_code, 200)
 
         print("[OK] GET /api/analytics/* -> All analytics endpoints functioning properly")
-
 
 if __name__ == "__main__":
     unittest.main()

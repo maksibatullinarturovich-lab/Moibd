@@ -1,12 +1,3 @@
-"""
-FastAPI Router for Recommendation Endpoints.
-Covers:
-1. Popular movies (IMDb Bayesian rating)
-2. Collaborative filtering (User-based & Item-based)
-3. Content-based recommendations (TF-IDF & Cosine Similarity)
-4. Personal recommendations (Hybrid SVD + Content)
-"""
-
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
@@ -21,16 +12,11 @@ from ml_engine.personal_hybrid import PersonalHybridRecommender
 
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
 
-# Singleton recommender instances
 popularity_rec = PopularityRecommender()
 collaborative_rec = CollaborativeRecommender()
 content_rec = ContentBasedRecommender()
 hybrid_rec = PersonalHybridRecommender()
 
-
-# =============================================================================
-# 1. TOP-10 POPULAR MOVIES
-# =============================================================================
 @router.get(
     "/popular",
     response_model=RecommendationResponse,
@@ -50,10 +36,6 @@ def get_popular_movies(
         recommendations=[MovieResponse(**r) for r in results]
     )
 
-
-# =============================================================================
-# 2. COLLABORATIVE FILTERING (User-based & Item-based)
-# =============================================================================
 @router.get(
     "/collaborative/user-based",
     response_model=RecommendationResponse,
@@ -77,7 +59,6 @@ def get_user_based_recommendations(
         target_user_id=user_id,
         recommendations=[MovieResponse(**r) for r in results]
     )
-
 
 @router.get(
     "/collaborative/item-based",
@@ -103,7 +84,6 @@ def get_item_based_recommendations(
         recommendations=[MovieResponse(**r) for r in results]
     )
 
-
 @router.get(
     "/collaborative/item-based-for-user",
     response_model=RecommendationResponse,
@@ -128,10 +108,6 @@ def get_item_based_user_recommendations(
         recommendations=[MovieResponse(**r) for r in results]
     )
 
-
-# =============================================================================
-# 3. CONTENT-BASED RECOMMENDATIONS
-# =============================================================================
 @router.get(
     "/content-based",
     response_model=RecommendationResponse,
@@ -155,7 +131,6 @@ def get_content_based_recommendations(
         target_movie_id=movie_id,
         recommendations=[MovieResponse(**r) for r in results]
     )
-
 
 @router.get(
     "/content-based/user-profile",
@@ -181,10 +156,6 @@ def get_content_based_user_recommendations(
         recommendations=[MovieResponse(**r) for r in results]
     )
 
-
-# =============================================================================
-# 4. PERSONAL RECOMMENDATIONS FOR USER
-# =============================================================================
 @router.get(
     "/personal",
     response_model=RecommendationResponse,

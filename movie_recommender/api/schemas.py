@@ -1,7 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-
 class MovieResponse(BaseModel):
     id: int
     title: str
@@ -23,12 +22,10 @@ class MovieResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
 class RatingCreate(BaseModel):
     user_id: int = Field(..., description="ID пользователя")
     movie_id: int = Field(..., description="ID фильма")
     rating: float = Field(..., ge=1.0, le=5.0, description="Оценка от 1.0 до 5.0")
-
 
 class RatingResponse(BaseModel):
     id: int
@@ -41,10 +38,8 @@ class RatingResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=2, max_length=100)
-
 
 class UserResponse(BaseModel):
     id: int
@@ -54,7 +49,6 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 class RecommendationResponse(BaseModel):
     status: str = "success"

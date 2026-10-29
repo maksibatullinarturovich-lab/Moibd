@@ -3,7 +3,6 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from database.models import Movie, Rating
 
-
 class PopularityRecommender:
     def __init__(self, min_ratings: int = 2):
         self.min_ratings = min_ratings

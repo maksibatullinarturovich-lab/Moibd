@@ -5,7 +5,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sqlalchemy.orm import Session, joinedload
 from database.models import Movie, Rating
 
-
 class ContentBasedRecommender:
     def __init__(self):
         self.vectorizer = TfidfVectorizer(

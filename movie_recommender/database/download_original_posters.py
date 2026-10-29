@@ -45,7 +45,6 @@ KINOPOISK_IDS = {
     "Прочь": 961715
 }
 
-
 def download_all():
     os.makedirs(POSTERS_DIR, exist_ok=True)
     db = SessionLocal()
@@ -57,7 +56,7 @@ def download_all():
         for idx, m in enumerate(movies, start=1):
             kpid = KINOPOISK_IDS.get(m.title)
             if not kpid:
-                # Try finding by substring or stripped quotes
+
                 clean_m = m.title.replace("«", "").replace("»", "").replace(":", "").strip()
                 for t, kid in KINOPOISK_IDS.items():
                     clean_t = t.replace("«", "").replace("»", "").replace(":", "").strip()
@@ -84,15 +83,12 @@ def download_all():
                     with open(jpg_dest, "wb") as f:
                         f.write(data)
 
-                    # Save optimized PNG copy
                     with Image.open(jpg_dest) as im:
                         im.save(png_dest, "PNG")
 
-                    # Copy by movie index (1.jpg, 2.jpg)
                     shutil.copyfile(jpg_dest, os.path.join(POSTERS_DIR, f"{idx}.jpg"))
                     shutil.copyfile(png_dest, os.path.join(POSTERS_DIR, f"{idx}.png"))
 
-                    # Copy by clean title
                     safe_title = m.title.replace(":", "").replace("/", "_").replace("«", "").replace("»", "").strip()
                     shutil.copyfile(jpg_dest, os.path.join(POSTERS_DIR, f"{safe_title}.jpg"))
                     shutil.copyfile(png_dest, os.path.join(POSTERS_DIR, f"{safe_title}.png"))
@@ -109,7 +105,6 @@ def download_all():
         print(f"\nCOMPLETED: {success}/{len(movies)} original posters downloaded!")
     finally:
         db.close()
-
 
 if __name__ == "__main__":
     download_all()

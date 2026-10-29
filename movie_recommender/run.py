@@ -5,7 +5,6 @@ import subprocess
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-
 def run_seed():
     print("Инициализация и наполнение базы данных MySQL...")
     from database.connection import init_db
@@ -14,24 +13,20 @@ def run_seed():
     seed_database()
     print("База данных готова.")
 
-
 def run_api():
     print("Запуск FastAPI backend на http://127.0.0.1:8000 ...")
     import uvicorn
     uvicorn.run("api.main:app", host="127.0.0.1", port=8000, reload=True)
-
 
 def run_app():
     print("Запуск интерфейса Streamlit...")
     app_path = os.path.join(PROJECT_ROOT, "app", "streamlit_app.py")
     subprocess.run([sys.executable, "-m", "streamlit", "run", app_path])
 
-
 def run_tests():
     print("Запуск тестов...")
     test_path = os.path.join(PROJECT_ROOT, "tests", "test_recommenders.py")
     subprocess.run([sys.executable, test_path])
-
 
 def run_all():
     run_seed()
@@ -48,7 +43,6 @@ def run_all():
     finally:
         print("Остановка сервера API...")
         api_process.terminate()
-
 
 if __name__ == "__main__":
     action = sys.argv[1].lower() if len(sys.argv) > 1 else "help"

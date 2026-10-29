@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 from database.models import Movie, Rating, User
 from ml_engine.content_based import ContentBasedRecommender
 
-
 class MLEvaluationEngine:
     def __init__(self):
         self.content_rec = ContentBasedRecommender()

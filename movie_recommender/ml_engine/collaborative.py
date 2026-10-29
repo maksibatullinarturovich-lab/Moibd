@@ -5,7 +5,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sqlalchemy.orm import Session, joinedload
 from database.models import Movie, Rating
 
-
 class CollaborativeRecommender:
     def __init__(self, k_neighbors: int = 10, min_common_ratings: int = 1):
         self.k_neighbors = k_neighbors

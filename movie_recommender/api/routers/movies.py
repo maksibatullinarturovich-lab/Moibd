@@ -1,7 +1,3 @@
-"""
-FastAPI Router for Movie operations (browsing, searching, details).
-"""
-
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session, joinedload
@@ -12,7 +8,6 @@ from database.models import Movie
 from api.schemas import MovieResponse
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
-
 
 @router.get("", response_model=List[MovieResponse], summary="Получить список фильмов с фильтрацией")
 def list_movies(
@@ -32,7 +27,6 @@ def list_movies(
     movies = q.offset(skip).limit(limit).all()
     return [MovieResponse(**m.to_dict(include_stats=True)) for m in movies]
 
-
 @router.get("/genres", response_model=List[str], summary="Список всех доступных жанров")
 def get_genres(db: Session = Depends(get_db)):
     movies = db.query(Movie.genres).all()
@@ -42,7 +36,6 @@ def get_genres(db: Session = Depends(get_db)):
             for g in row[0].split(","):
                 unique_genres.add(g.strip())
     return sorted(list(unique_genres))
-
 
 @router.get("/{movie_id}", response_model=MovieResponse, summary="Получить информацию о конкретном фильме")
 def get_movie_detail(movie_id: int, db: Session = Depends(get_db)):

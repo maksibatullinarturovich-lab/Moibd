@@ -3,7 +3,6 @@ import streamlit as st
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-
 def resolve_poster_path(movie: dict):
     poster = movie.get("poster_url")
     if poster:
@@ -31,7 +30,6 @@ def resolve_poster_path(movie: dict):
                 return fallback
 
     return None
-
 
 def render_movie_card(movie: dict, rank: int = None, show_score: str = None, key_prefix: str = ""):
     with st.container():

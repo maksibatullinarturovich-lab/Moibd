@@ -1,5 +1,3 @@
--- Schema for Movie Recommender System
--- Target: MySQL 8+
 
 CREATE DATABASE IF NOT EXISTS `movie_recommender_db`
   CHARACTER SET utf8mb4
@@ -7,7 +5,6 @@ CREATE DATABASE IF NOT EXISTS `movie_recommender_db`
 
 USE `movie_recommender_db`;
 
--- 1. Users Table
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
@@ -15,7 +12,6 @@ CREATE TABLE IF NOT EXISTS `users` (
     INDEX `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. Movies Table
 CREATE TABLE IF NOT EXISTS `movies` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(255) NOT NULL,
@@ -30,7 +26,6 @@ CREATE TABLE IF NOT EXISTS `movies` (
     INDEX `idx_genres` (`genres`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Ratings Table
 CREATE TABLE IF NOT EXISTS `ratings` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,

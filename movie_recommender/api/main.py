@@ -11,13 +11,11 @@ from database.connection import init_db, DB_DIALECT, DB_NAME
 from database.seed_data import seed_database
 from api.routers import recommendations, movies, ratings, analytics
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     seed_database()
     yield
-
 
 app = FastAPI(
     title="Movie Recommendation System API",
@@ -44,7 +42,6 @@ app.include_router(analytics.router, prefix="/api")
 static_dir = os.path.join(os.path.dirname(__file__), "..", "app", "static")
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
 
 @app.get("/", summary="Статус API")
 def root():
