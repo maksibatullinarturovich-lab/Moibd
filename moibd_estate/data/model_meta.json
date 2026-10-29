@@ -1,0 +1,106 @@
+{
+  "model_name": "Random Forest (Bagging)",
+  "val_metrics": [
+    {
+      "Model": "Ridge (Linear)",
+      "MAE": 398923.14,
+      "RMSE": 3898882.67,
+      "MAPE (%)": 2489.32,
+      "R2": 0.058,
+      "Adjusted R2": 0.0577
+    },
+    {
+      "Model": "Decision Tree",
+      "MAE": 299225.12,
+      "RMSE": 3847956.52,
+      "MAPE (%)": 175.32,
+      "R2": 0.0825,
+      "Adjusted R2": 0.0821
+    },
+    {
+      "Model": "Random Forest (Bagging)",
+      "MAE": 280317.36,
+      "RMSE": 3677458.78,
+      "MAPE (%)": 226.2,
+      "R2": 0.162,
+      "Adjusted R2": 0.1617
+    },
+    {
+      "Model": "LightGBM (Boosting)",
+      "MAE": 295526.03,
+      "RMSE": 3494194.92,
+      "MAPE (%)": 859.85,
+      "R2": 0.2434,
+      "Adjusted R2": 0.2432
+    }
+  ],
+  "test_metrics": [
+    {
+      "Model": "Ridge (Linear)",
+      "MAE": 365785.66,
+      "RMSE": 2789285.72,
+      "MAPE (%)": 2569.96,
+      "R2": 0.061,
+      "Adjusted R2": 0.0608
+    },
+    {
+      "Model": "Decision Tree",
+      "MAE": 263838.85,
+      "RMSE": 2800406.1,
+      "MAPE (%)": 246.35,
+      "R2": 0.0535,
+      "Adjusted R2": 0.0533
+    },
+    {
+      "Model": "Random Forest (Bagging)",
+      "MAE": 246803.61,
+      "RMSE": 2646646.63,
+      "MAPE (%)": 331.11,
+      "R2": 0.1546,
+      "Adjusted R2": 0.1544
+    },
+    {
+      "Model": "LightGBM (Boosting)",
+      "MAE": 274901.41,
+      "RMSE": 2736240.61,
+      "MAPE (%)": 1149.79,
+      "R2": 0.0964,
+      "Adjusted R2": 0.0962
+    }
+  ],
+  "best_test_metrics": {
+    "Model": "Random Forest (Bagging)",
+    "MAE": 246803.61,
+    "RMSE": 2646646.63,
+    "MAPE (%)": 331.11,
+    "R2": 0.1546,
+    "Adjusted R2": 0.1544
+  },
+  "num_cols": [
+    "listing_type",
+    "tom",
+    "size",
+    "building_age_num",
+    "floor_no_num",
+    "total_floor_count_num",
+    "room_total",
+    "rooms",
+    "living_rooms",
+    "floor_ratio",
+    "is_top_floor",
+    "is_ground_floor",
+    "size_per_room"
+  ],
+  "cat_cols": [
+    "sub_type",
+    "heating_type",
+    "city",
+    "district"
+  ],
+  "rates": {
+    "TRY": 1.0,
+    "GBP": 42.0,
+    "USD": 33.0,
+    "EUR": 36.0
+  }
+}
