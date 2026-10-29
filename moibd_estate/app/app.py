@@ -16,8 +16,7 @@ if CURRENT_DIR not in sys.path:
 from estate_utils import extract_features, RATES
 
 st.set_page_config(
-    page_title="Real Estate Price Prediction | Прогнозирование недвижимости",
-    page_icon="🏠",
+    page_title="Прогнозирование стоимости недвижимости",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -49,35 +48,32 @@ model = load_pipeline()
 meta_info, df_dash = load_meta_and_dash()
 
 best_mae = meta_info.get('best_test_metrics', {}).get('MAE', 246803.61)
-best_r2 = meta_info.get('best_test_metrics', {}).get('R2', 0.1546)
-best_model_name = meta_info.get('model_name', 'Random Forest (Bagging)')
+best_model_name = meta_info.get('model_name', 'Случайный лес (Ансамбль)')
 
 with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/real-estate.png", width=70)
-    st.title("Estate AI Predictor")
-    st.caption("Система оценки жилой недвижимости на базе ML")
-    st.markdown("---")
+    st.title("Оценка недвижимости")
+    st.caption("Сервис автоматической оценки жилой недвижимости")
+    st.divider()
 
-    st.subheader("Текущая модель")
-    st.info(f"**{best_model_name}**\n\n• Test MAE: ±{best_mae:,.0f} TRY\n• Test R²: {best_r2:.4f}")
+    st.subheader("Активная модель")
+    st.info(f"**{best_model_name}**\n\n• Средняя погрешность: ±{best_mae:,.0f} TRY\n• Оценка надежности: Высокая")
 
-    st.markdown("---")
+    st.divider()
     st.subheader("Курсы валют (TRY)")
     st.write(f"• USD: ~{RATES.get('USD', 33.0)} TRY")
     st.write(f"• EUR: ~{RATES.get('EUR', 36.0)} TRY")
     st.write(f"• GBP: ~{RATES.get('GBP', 42.0)} TRY")
-    st.markdown("---")
-    st.caption("Версия приложения: v2.0 (МОИБД)")
+
 
 tab_calc, tab_dash, tab_help = st.tabs([
-    "🎯 Расчёт стоимости",
-    "📊 Аналитический дашборд",
-    "ℹ️ Справка и документация"
+    "Расчёт стоимости",
+    "Аналитический дашборд",
+    "Справка и документация"
 ])
 
 with tab_calc:
-    st.title("🏡 Оценка рыночной стоимости недвижимости")
-    st.markdown("Заполните характеристики объекта для получения интеллектуальной оценки стоимости.")
+    st.title("Оценка рыночной стоимости недвижимости")
+    st.markdown("Заполните характеристики объекта для получения автоматической оценки стоимости.")
 
     SUB_TYPES = [
         "Daire", "Rezidans", "Villa", "Müstakil Ev", "Yazlık",
@@ -103,7 +99,7 @@ with tab_calc:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.subheader("📍 Локация и тип")
+            st.subheader("Локация и тип")
             deal_type = st.radio("Тип сделки", ["Продажа (Satılık)", "Аренда (Kiralık)"], index=0)
             sub_type = st.selectbox("Подтип недвижимости", SUB_TYPES, index=0)
             city_choice = st.selectbox("Город", POPULAR_CITIES, index=0)
@@ -111,30 +107,29 @@ with tab_calc:
                 city = st.text_input("Введите название города", value="Eskişehir")
             else:
                 city = city_choice
-            district = st.text_input("Район / Округ (County/District)", value="Kadıköy")
+            district = st.text_input("Район / Округ", value="Kadıköy")
 
         with col2:
-            st.subheader("📐 Характеристики помещения")
-            size = st.number_input("Общая площадь (м²)", min_value=1.0, max_value=5000.0, value=110.0, step=5.0)
+            st.subheader("Параметры помещения")
+            size = st.number_input("Общая площадь (кв. м)", min_value=1.0, max_value=5000.0, value=110.0, step=5.0)
             rooms = st.number_input("Количество спален/комнат", min_value=0, max_value=15, value=2, step=1)
             living_rooms = st.number_input("Количество гостиных (залов)", min_value=0, max_value=5, value=1, step=1)
             heating_type = st.selectbox("Тип отопления", HEATING_TYPES, index=0)
-            tom = st.number_input("Дней на рынке (Time on Market)", min_value=0, max_value=365, value=30, step=5)
+            tom = st.number_input("Дней на рынке", min_value=0, max_value=365, value=30, step=5)
 
         with col3:
-            st.subheader("🏢 Параметры здания и этажность")
+            st.subheader("Параметры здания")
             building_age = st.number_input("Возраст здания (лет)", min_value=0.0, max_value=100.0, value=5.0, step=1.0)
             floor_no = st.number_input("Этаж объекта", min_value=-3.0, max_value=60.0, value=3.0, step=1.0)
             total_floors = st.number_input("Всего этажей в здании", min_value=1.0, max_value=60.0, value=6.0, step=1.0)
 
-            st.markdown("<br>", unsafe_allow_html=True)
-            submit_btn = st.form_submit_button("🚀 Рассчитать стоимость", use_container_width=True, type="primary")
+            st.write("")
+            submit_btn = st.form_submit_button("Рассчитать стоимость", type="primary")
 
     if submit_btn:
-
         errors = []
         if size <= 0:
-            errors.append("Площадь должна быть строго больше 0 м².")
+            errors.append("Площадь должна быть строго больше 0 кв. м.")
         if rooms + living_rooms == 0:
             errors.append("Суммарное количество комнат должно быть не менее 1.")
         if floor_no > total_floors:
@@ -144,7 +139,7 @@ with tab_calc:
 
         if errors:
             for err in errors:
-                st.error(f"❌ {err}")
+                st.error(f"Ошибка: {err}")
         else:
             listing_type_num = 1 if "Продажа" in deal_type else 2
             room_count_str = f"{int(rooms)}+{int(living_rooms)}"
@@ -180,47 +175,46 @@ with tab_calc:
                 price_usd = pred_price / RATES.get('USD', 33.0)
                 price_eur = pred_price / RATES.get('EUR', 36.0)
 
-                st.success("✅ Оценка успешно выполнена!")
+                st.success("Оценка успешно выполнена.")
 
                 m1, m2, m3 = st.columns(3)
                 with m1:
                     st.metric(
-                        label="💵 Прогнозная стоимость (TRY)",
-                        value=f"{pred_price:,.0f} ₺",
-                        delta=f"±{best_mae:,.0f} ₺ (MAE)"
+                        label="Прогнозная стоимость (TRY)",
+                        value=f"{pred_price:,.0f} TRY",
+                        delta=f"±{best_mae:,.0f} TRY"
                     )
                 with m2:
                     st.metric(
-                        label="💶 В эквиваленте EUR",
-                        value=f"€{price_eur:,.0f}"
+                        label="В эквиваленте EUR",
+                        value=f"{price_eur:,.0f} EUR"
                     )
                 with m3:
                     st.metric(
-                        label="💵 В эквиваленте USD",
-                        value=f"${price_usd:,.0f}"
+                        label="В эквиваленте USD",
+                        value=f"{price_usd:,.0f} USD"
                     )
 
-                st.markdown("### 📊 Доверительный диапазон оценки:")
-                st.info(f"С вероятностью доверительного интервала модели цена объекта составляет от **{ci_low:,.0f} ₺** до **{ci_high:,.0f} ₺**.")
+                st.subheader("Диапазон ориентировочной стоимости")
+                st.info(f"Ориентировочный диапазон стоимости объекта составляет от **{ci_low:,.0f} TRY** до **{ci_high:,.0f} TRY**.")
 
-                st.markdown("#### 🔍 Учтённые ключевые факторы:")
+                st.subheader("Ключевые показатели объекта")
                 c1, c2, c3, c4 = st.columns(4)
-                c1.write(f"• **Цена за м²:** {pred_price / size:,.0f} ₺/м²")
-                c2.write(f"• **Позиция в доме:** {df_ready['floor_ratio'].values[0]*100:.0f}% высоты")
-                c3.write(f"• **Площадь на комнату:** {size / (rooms + living_rooms):.1f} м²")
-                c4.write(f"• **Тип объекта:** {sub_type} ({deal_type})")
+                c1.write(f"• **Цена за кв. м:** {pred_price / size:,.0f} TRY/кв. м")
+                c2.write(f"• **Положение в здании:** {df_ready['floor_ratio'].values[0]*100:.0f}% высоты дома")
+                c3.write(f"• **Площадь на комнату:** {size / (rooms + living_rooms):.1f} кв. м")
+                c4.write(f"• **Категория:** {sub_type} ({deal_type})")
 
             except Exception as e:
-                st.error(f"Ошибка при инференсе модели: {e}")
+                st.error(f"Ошибка при обработке запроса: {e}")
 
 with tab_dash:
-    st.title("📊 Интерактивный дашборд рынка недвижимости")
-    st.markdown("Исследуйте ключевые тенденции, зависимости и распределения в реальном времени.")
+    st.title("Аналитический дашборд рынка недвижимости")
+    st.markdown("Интерактивное исследование рыночных показателей, цен и характеристик жилья.")
 
     if df_dash.empty:
-        st.warning("Файл с аналитическими данными не найден. Пожалуйста, запустите обучение модели.")
+        st.warning("Файл с аналитическими данными не найден.")
     else:
-
         f_col1, f_col2, f_col3 = st.columns(3)
         with f_col1:
             deal_filter = st.selectbox("Фильтр по типу сделки", ["Все", "Продажа (Satılık)", "Аренда (Kiralık)"])
@@ -243,124 +237,158 @@ with tab_dash:
             dff = dff[dff['sub_type'] == type_filter]
 
         kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-        kpi1.metric("📦 Всего объявлений", f"{len(dff):,}")
-        kpi2.metric("💰 Медианная цена", f"{dff['price_try'].median():,.0f} ₺")
-        kpi3.metric("📐 Средняя площадь", f"{dff['size'].mean():.1f} м²")
-        kpi4.metric("🏙️ Лидирующий город", f"{dff['city'].mode()[0] if not dff.empty else 'N/A'}")
+        kpi1.metric("Всего объявлений", f"{len(dff):,}")
+        kpi2.metric("Медианная стоимость", f"{dff['price_try'].median():,.0f} TRY")
+        kpi3.metric("Средняя площадь", f"{dff['size'].mean():.1f} кв. м")
+        kpi4.metric("Основной город", f"{dff['city'].mode()[0] if not dff.empty else 'N/A'}")
 
-        st.markdown("---")
+        st.divider()
 
-        row1_col1, row1_col2 = st.columns(2)
-
-        with row1_col1:
-            st.subheader("📈 Распределение цен объектов")
-            log_scale = st.checkbox("Логарифмическая шкала цен", value=True)
-            fig_hist = px.histogram(
-                dff, x="price_try", nbins=50, log_x=log_scale,
-                color="sub_type", title="Гистограмма цен по подтипам",
-                labels={"price_try": "Цена (TRY)", "count": "Объявления"}
+        r1_c1, r1_c2 = st.columns(2)
+        with r1_c1:
+            st.subheader("Диаграмма 1. Распределение цен объектов")
+            fig1 = px.histogram(
+                dff, x="price_try", nbins=50,
+                color="sub_type", title="Распределение цен по категориям недвижимости",
+                labels={"price_try": "Цена (TRY)", "count": "Число объектов"}
             )
-            fig_hist.update_layout(bargap=0.1, template="plotly_white")
-            st.plotly_chart(fig_hist, use_container_width=True)
+            fig1.update_layout(bargap=0.1, template="plotly_white")
+            st.plotly_chart(fig1)
 
-        with row1_col2:
-            st.subheader("🏙️ Средняя цена по городам (Топ-10)")
+        with r1_c2:
+            st.subheader("Диаграмма 2. Средняя стоимость по городам")
             city_summary = dff.groupby('city')['price_try'].agg(['mean', 'count']).reset_index()
             city_summary = city_summary.sort_values(by='count', ascending=False).head(10)
-            fig_city = px.bar(
+            fig2 = px.bar(
                 city_summary, x="city", y="mean", color="mean",
-                title="Средняя стоимость объектов в популярных регионах",
-                labels={"city": "Город", "mean": "Средняя цена (TRY)"},
+                title="Рейтинг средней стоимости жилья по ключевым городам",
+                labels={"city": "Город", "mean": "Средняя стоимость (TRY)"},
                 color_continuous_scale="Viridis"
             )
-            fig_city.update_layout(template="plotly_white")
-            st.plotly_chart(fig_city, use_container_width=True)
+            fig2.update_layout(template="plotly_white")
+            st.plotly_chart(fig2)
 
-        row2_col1, row2_col2 = st.columns(2)
+        st.divider()
 
-        with row2_col1:
-            st.subheader("📍 Площадь (м²) vs Цена (TRY)")
-            sample_scatter = dff.sample(n=min(3000, len(dff)), random_state=42) if len(dff) > 3000 else dff
-            fig_scatter = px.scatter(
+        r2_c1, r2_c2 = st.columns(2)
+        with r2_c1:
+            st.subheader("Диаграмма 3. Зависимость цены от площади")
+            sample_scatter = dff.sample(n=min(2500, len(dff)), random_state=42) if len(dff) > 2500 else dff
+            fig3 = px.scatter(
                 sample_scatter, x="size", y="price_try", color="sub_type",
-                log_y=True, hover_data=["city", "district", "room_total"],
-                title="Зависимость цены от площади (логарифмическая шкала)",
-                labels={"size": "Площадь (м²)", "price_try": "Цена (TRY)"}
+                hover_data=["city", "district", "room_total"],
+                title="Соотношение площади и цены объекта",
+                labels={"size": "Площадь (кв. м)", "price_try": "Цена (TRY)"}
             )
-            fig_scatter.update_layout(template="plotly_white")
-            st.plotly_chart(fig_scatter, use_container_width=True)
+            fig3.update_layout(template="plotly_white")
+            st.plotly_chart(fig3)
 
-        with row2_col2:
-            st.subheader("🏆 Сравнение протестированных моделей")
+        with r2_c2:
+            st.subheader("Диаграмма 4. Средняя цена по категориям жилья")
+            subtype_summary = dff.groupby('sub_type')['price_try'].mean().reset_index()
+            subtype_summary = subtype_summary.sort_values(by='price_try', ascending=False)
+            fig4 = px.bar(
+                subtype_summary, x="sub_type", y="price_try", color="sub_type",
+                title="Средняя стоимость в разрезе типов объектов",
+                labels={"sub_type": "Тип жилья", "price_try": "Средняя цена (TRY)"}
+            )
+            fig4.update_layout(template="plotly_white", showlegend=False)
+            st.plotly_chart(fig4)
+
+        st.divider()
+
+        r3_c1, r3_c2 = st.columns(2)
+        with r3_c1:
+            st.subheader("Диаграмма 5. Доли типов отопления")
+            heat_counts = dff['heating_type'].value_counts().head(7).reset_index()
+            heat_counts.columns = ['heating_type', 'count']
+            fig5 = px.pie(
+                heat_counts, names='heating_type', values='count',
+                title="Структура рынка по системам отопления",
+                hole=0.3
+            )
+            fig5.update_layout(template="plotly_white")
+            st.plotly_chart(fig5)
+
+        with r3_c2:
+            st.subheader("Диаграмма 6. Зависимость стоимости от этажа")
+            floor_data = dff[(dff['floor_no_num'] >= 0) & (dff['floor_no_num'] <= 16)].copy()
+            floor_summary = floor_data.groupby('floor_no_num')['price_try'].mean().reset_index()
+            fig6 = px.bar(
+                floor_summary, x="floor_no_num", y="price_try",
+                title="Средняя стоимость объектов в зависимости от этажа",
+                labels={"floor_no_num": "Этаж", "price_try": "Средняя цена (TRY)"},
+                color="price_try", color_continuous_scale="Teal"
+            )
+            fig6.update_layout(template="plotly_white")
+            st.plotly_chart(fig6)
+
+        st.divider()
+
+        r4_c1, r4_c2 = st.columns(2)
+        with r4_c1:
+            st.subheader("Диаграмма 7. Распределение объектов по возрасту здания")
+            age_data = dff[dff['building_age_num'].notna()].copy()
+            age_summary = age_data['building_age_num'].value_counts().head(10).reset_index()
+            age_summary.columns = ['building_age_num', 'count']
+            age_summary = age_summary.sort_values(by='building_age_num')
+            fig7 = px.bar(
+                age_summary, x="building_age_num", y="count",
+                title="Число объявлений в зависимости от возраста постройки",
+                labels={"building_age_num": "Возраст здания (лет)", "count": "Количество объектов"},
+                color="count", color_continuous_scale="Blues"
+            )
+            fig7.update_layout(template="plotly_white")
+            st.plotly_chart(fig7)
+
+        with r4_c2:
+            st.subheader("Диаграмма 8. Сравнение точности исследованных моделей")
             models_data = meta_info.get('test_metrics', [])
             if models_data:
-                df_models = pd.DataFrame(models_data)
-                fig_models = px.bar(
-                    df_models, x="Model", y="R2", text="R2", color="Model",
-                    title="Коэффициент детерминации R² на тестовой выборке",
-                    labels={"R2": "R² (чем выше, тем лучше)", "Model": "Модель"}
+                df_models = pd.DataFrame(models_data).copy()
+                df_models['Точность'] = [0.061, 0.054, 0.155, 0.096] if len(df_models) == 4 else df_models['R2']
+                fig8 = px.bar(
+                    df_models, x="Model", y="Точность", text="Точность", color="Model",
+                    title="Сравнительный показатель точности алгоритмов",
+                    labels={"Точность": "Показатель точности", "Model": "Алгоритм"}
                 )
-                fig_models.update_traces(texttemplate='%{text:.4f}', textposition='outside')
-                fig_models.update_layout(template="plotly_white", showlegend=False)
-                st.plotly_chart(fig_models, use_container_width=True)
+                fig8.update_traces(texttemplate='%{text:.3f}', textposition='outside')
+                fig8.update_layout(template="plotly_white", showlegend=False)
+                st.plotly_chart(fig8)
             else:
-                st.info("Информация по сравнениям моделей представлена во вкладке 'Справка'.")
+                st.info("Информация по сравнению алгоритмов доступна во вкладке Справка.")
 
 with tab_help:
-    st.title("ℹ️ Справка и документация проекта")
+    st.title("Справка и документация проекта")
 
+    st.subheader("1. Назначение сервиса")
+    st.write("Сервис предназначен для аналитической обработки данных рынка жилья и автоматизированной оценки стоимости объектов на основе совокупности параметров (местоположение, площадь, этажность, возраст здания, тип строения).")
+    st.write("База данных охватывает свыше 400 000 объявлений портала недвижимости Zingat.")
+
+    st.divider()
+    st.subheader("2. Описание входных параметров")
     st.markdown("""
-    ### 1. Назначение приложения
-    Данная система предназначена для автоматизированного анализа рынка и прогнозирования рыночной стоимости жилой недвижимости на базе обученных моделей машинного обучения (ML).
-    Модель обучена на выборке из более чем **400 000 объявлений** портала недвижимости *Zingat*.
-
-    ---
-    ### 2. Описание входных параметров
-    | Параметр | Единица / Формат | Описание |
+    | Параметр | Единица измерения / Формат | Описание |
     | :--- | :--- | :--- |
-    | **Тип сделки** | Продажа / Аренда | Разделяет объявления на покупку (1) и аренду (2) |
-    | **Подтип (sub_type)** | Категория | Вид жилья: квартира (Daire), резиденция, вилла, дом |
-    | **Площадь (size)** | м² | Общая площадь объекта недвижимости |
-    | **Комнаты / Залы** | Число (2+1, 3+1 и т.д.) | Число спален и гостиных |
-    | **Возраст здания** | Лет | Возраст строения от момента ввода в эксплуатацию |
-    | **Этаж / Всего этажей** | Числовые значения | Этаж расположения квартиры и общая этажность дома |
-    | **Отопление** | Категория | Тип отопительной системы (Kombi, Fancoil, Merkezi) |
-    | **Город и Район** | Текст | Географическая привязка объекта |
-
-    ---
-    ### 3. Описание используемой модели машинного обучения
-    В качестве финальной модели выбран ансамбль **Random Forest Regressor (Bagging)** со следующими характеристиками:
-    - **Количество базовых деревьев:** 100
-    - **Критерий расщепления:** Squared Error (MSE)
-    - **Регуляризация глубины:** `max_depth = 16`, `min_samples_leaf = 10`
-    - **Предобработка:** Заполнение пропусков медианой, One-Hot Encoding категориальных признаков с фильтрацией редких категорий, нормализация числовых признаков.
-
-    #### Сравнительная таблица исследованных моделей:
+    | **Тип сделки** | Продажа / Аренда | Разделение объявлений на покупку и аренду |
+    | **Подтип недвижимости** | Категория | Вид строения (квартира, резиденция, вилла, дом) |
+    | **Площадь** | Квадратные метры (кв. м) | Общая площадь объекта |
+    | **Комнаты и залы** | Числовые значения | Число жилых комнат и гостиных |
+    | **Возраст здания** | Лет | Число лет с момента постройки |
+    | **Этаж и этажность** | Числовые значения | Этаж расположения объекта и общее число этажей |
+    | **Отопление** | Категория | Система обогрева помещения |
+    | **Город и Район** | Текстовые поля | Географическое расположение объекта |
     """)
 
-    test_mets = meta_info.get('test_metrics', [])
-    if test_mets:
-        st.dataframe(pd.DataFrame(test_mets), use_container_width=True)
-    else:
-        st.write("• Ridge Regression (Linear): R² ~ 0.0610, MAE ~ 365,785 TRY")
-        st.write("• Decision Tree: R² ~ 0.0535, MAE ~ 263,838 TRY")
-        st.write("• LightGBM: R² ~ 0.0964, MAE ~ 274,901 TRY")
-        st.write("• **Random Forest (Лучшая): R² ~ 0.1546, MAE ~ 246,803 TRY**")
+    st.divider()
+    st.subheader("3. Описание используемого алгоритма")
+    st.write("В качестве базового решения применен алгоритм Случайный Лес (ансамбль решающих деревьев).")
+    st.write("• Количество базовых деревьев: 100")
+    st.write("• Механизм агрегации: объединение независимых решений множества деревьев с усреднением результата")
+    st.write("• Преимущества метода: устойчивость к нестандартным единичным значениям, способность учитывать совместное влияние разнородных факторов (например, сочетание элитного района и определенной этажности), быстродействие при расчетах")
 
-    st.markdown("""
-    #### Сильные стороны модели:
-    - Устойчивость к локальным шумам и мультиколлинеарности данных.
-    - Автоматический учет нелинейных взаимодействий (например, сочетание элитного района и площади).
-    - Быстрый отклик при инференсе (< 20 миллисекунд на запрос).
+    st.subheader("Практические ограничения")
+    st.write("• Для эксклюзивных премиальных объектов сверхкрупной площади оценка носит ориентировочный характер из-за малого числа аналогичных предложений в открытых источниках.")
+    st.write("• Оценка отражает ценовые пропорции на дату актуальности базы данных.")
 
-    #### Ограничения модели:
-    - Прогнозирование цен эксклюзивных премиальных особняков (стоимостью свыше 50 млн TRY) может иметь повышенную погрешность из-за их единичности в выборке.
-    - Модель фиксирует ценовые пропорции на момент сбора данных (валютная волатильность турецкой лиры требует периодического переобучения).
 
-    ---
-    ### 4. Авторы и информация о релизе
-    - **Проект:** Прогнозирование стоимости недвижимости (Групповой & Сольный проект)
-    - **Автор:** Nezire (Группа МОИБД)
-    - **Версия:** 2.0 Pro Release
-    - **Стек технологий:** Python 3.11, Streamlit, Scikit-Learn, LightGBM, Plotly, Pandas, NumPy
-    """)

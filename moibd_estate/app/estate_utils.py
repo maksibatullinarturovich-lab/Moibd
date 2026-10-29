@@ -83,7 +83,6 @@ def parse_total_floor_count(x):
     return float(m[0]) if m else np.nan
 
 def extract_features(df_input):
-
     df = df_input.copy()
 
     if 'building_age' in df.columns:
