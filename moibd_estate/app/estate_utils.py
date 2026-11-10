@@ -115,13 +115,17 @@ def extract_features(df_input):
 
     if 'address' in df.columns:
         addr_split = df['address'].astype(str).str.split('/', expand=True)
-        df['city'] = addr_split[0].str.strip() if 0 in addr_split.columns else 'Unknown'
-        df['district'] = addr_split[1].str.strip() if 1 in addr_split.columns else 'Unknown'
+        if 'city' not in df.columns or df['city'].isna().all():
+            df['city'] = addr_split[0].str.strip() if 0 in addr_split.columns else 'Unknown'
+        if 'district' not in df.columns or df['district'].isna().all():
+            df['district'] = addr_split[1].str.strip() if 1 in addr_split.columns else 'Unknown'
     else:
         if 'city' not in df.columns:
             df['city'] = 'Unknown'
         if 'district' not in df.columns:
             df['district'] = 'Unknown'
+
+    df['city_district'] = df['city'].fillna('Unknown').astype(str) + '_' + df['district'].fillna('Unknown').astype(str)
 
     safe_tot_floor = df['total_floor_count_num'].replace(0, np.nan)
     df['floor_ratio'] = (df['floor_no_num'] / safe_tot_floor).fillna(0.5).clip(0, 1.5)
@@ -137,7 +141,7 @@ def extract_features(df_input):
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    for col in ['sub_type', 'heating_type', 'city', 'district']:
+    for col in ['sub_type', 'heating_type', 'city', 'district', 'city_district']:
         if col in df.columns:
             df[col] = df[col].fillna('Unknown').astype(str)
 

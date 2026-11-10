@@ -52,7 +52,7 @@ def load_meta_and_dash():
 model = load_pipeline()
 meta_info, df_dash, df_comp = load_meta_and_dash()
 
-best_mae = meta_info.get('best_test_metrics', {}).get('MAE', 246803.61)
+best_mae = meta_info.get('best_test_metrics', {}).get('MAE', 171738.03)
 best_model_name = "Случайный лес (Ансамбль бэггинга)"
 
 with st.sidebar:
@@ -277,9 +277,9 @@ with tab_dash:
         with gcol8:
             st.subheader("Диаграмма 8. Сравнение средней погрешности моделей")
             models_data = [
-                {"Модель": "Линейная (Ridge)", "Средняя погрешность (TRY)": 365785},
-                {"Модель": "Дерево решений", "Средняя погрешность (TRY)": 263838},
-                {"Модель": "Случайный лес (Лучшая)", "Средняя погрешность (TRY)": 246804}
+                {"Модель": "Линейная (Ridge)", "Средняя погрешность (TRY)": 239021},
+                {"Модель": "Дерево решений", "Средняя погрешность (TRY)": 189958},
+                {"Модель": "Случайный лес (Лучшая)", "Средняя погрешность (TRY)": 171738}
             ]
             df_models = pd.DataFrame(models_data)
             fig8 = px.bar(df_models, x="Модель", y="Средняя погрешность (TRY)", color="Модель", color_discrete_sequence=['#E53935', '#FB8C00', '#43A047'])
