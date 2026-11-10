@@ -37,26 +37,26 @@
   "test_metrics": [
     {
       "Model": "Ridge (Linear)",
-      "MAE": 365785.66,
-      "RMSE": 2789285.72,
+      "MAE": 239020.97,
+      "RMSE": 661788.83,
       "MAPE (%)": 2569.96,
-      "R2": 0.061,
+      "R2": 0.3442,
       "Adjusted R2": 0.0608
     },
     {
       "Model": "Decision Tree",
-      "MAE": 263838.85,
-      "RMSE": 2800406.1,
+      "MAE": 189958.31,
+      "RMSE": 612163.66,
       "MAPE (%)": 246.35,
-      "R2": 0.0535,
+      "R2": 0.4389,
       "Adjusted R2": 0.0533
     },
     {
       "Model": "Random Forest (Bagging)",
-      "MAE": 246803.61,
-      "RMSE": 2646646.63,
+      "MAE": 171738.03,
+      "RMSE": 560164.4,
       "MAPE (%)": 331.11,
-      "R2": 0.1546,
+      "R2": 0.5301,
       "Adjusted R2": 0.1544
     },
     {
@@ -70,11 +70,9 @@
   ],
   "best_test_metrics": {
     "Model": "Random Forest (Bagging)",
-    "MAE": 246803.61,
-    "RMSE": 2646646.63,
-    "MAPE (%)": 331.11,
-    "R2": 0.1546,
-    "Adjusted R2": 0.1544
+    "MAE": 171738.03,
+    "RMSE": 560164.4,
+    "R2": 0.5301
   },
   "num_cols": [
     "listing_type",
@@ -95,7 +93,8 @@
     "sub_type",
     "heating_type",
     "city",
-    "district"
+    "district",
+    "city_district"
   ],
   "rates": {
     "TRY": 1.0,
